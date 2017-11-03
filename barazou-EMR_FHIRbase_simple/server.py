@@ -7,17 +7,21 @@
 # Do not, repeat do not use this code in production!
 
 import http.server
-import os
 import re
 import json
+import ssl
 
 import psycopg2
 import jsonschema
 
 PORT = 8000
+DBNAME = "fhirbase"
+USER = "user"
+PASSWORD = "password"
+SCHEMADIR = "./schema"
 
 # Connect to PostgreSQL/FHIRbase server
-db_conn = psycopg2.connect(dbname="fhirbase", user="user", password="password")
+db_conn = psycopg2.connect(dbname=DBNAME, user=USER, password=PASSWORD)
 db_cur = db_conn.cursor()
 db_cur.execute("SET plv8.start_proc = 'plv8_init';")
 
@@ -53,13 +57,50 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
             return True
         # History
         # Search
+        ## GET [base]/[type]
+        path_search = re.match('(?P<base>[^?/]+)/(?P<type>[^?/]+)$', self.path)
+        if path_search:
+            d = path_search.groupdict()
+            s = tuple([json.dumps({"resourceType": d["type"]})])
+            db_cur.execute('SELECT fhir_search(%s)', s)
+            result = db_cur.fetchall()
+            self.send_response(400)
+            self.send_header('Content-type', 'application/fhir+json')
+            self.end_headers()
+            self.wfile.write(bytes(json.dumps(result), 'utf-8'))
+            return True
         # Capabilities
-        # ...
-
+        ## GET [base]/metadata
+        path_capabilities = re.match('(?P<base>[^?/]+)/metadata$', self.path)
+        if path_capabilities:
+            d = path_capabilities.groupdict()
+            #s = tuple([json.dumps({})])
+            #db_cur.execute('', s)
+            result = db_cur.fetchall()
+            self.send_response(400)
+            self.send_header('Content-type', 'application/fhir+json')
+            self.end_headers()
+            self.wfile.write(bytes(json.dumps(result), 'utf-8'))
+            return True
     def do_PUT(self):
-        #Check input JSON against corresponding schema before insertion
+        ##PUT [base]/[type]/[id]
+        path_update = re.match('(?P<base>[^?/]+)/(?P<type>[^?/]+)/(?P<id>[^?/]+)$', 
+self.path)
+        if path_update:
+            # Check input JSON against corresponding schema before insertion
+            input = json.loads(self.rfile.read())
+            type = input["resourceType"]
+        ##build JSON template name from resource type string
+        ##check schema using jsonschema
+        jsonschema.validate(input, schema)
+        # Try to create storage for resource type each time storage is attempted;
+        # alternatively, create all types of storage on creation of database
         pass
     def do_DELETE(self):
+        # Delete
+        ## DELETE [base]/[type]/[id]
+        #path_delete = re.match('(?P<base>[^?/]+)/(?P<type>[^?/]+)/(?P<id>[^?/])$', self.path)
+        # ...
         pass
     def do_POST(self):
         pass
