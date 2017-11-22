@@ -20,6 +20,8 @@ DBNAME = "fhirbase"
 USER = "user"
 PASSWORD = "password"
 SCHEMADIR = "./schema/"
+KEYFILE = ""
+CERTFILE = ""
 
 # Connect to PostgreSQL/FHIRbase server
 db_conn = psycopg2.connect(dbname=DBNAME, user=USER, password=PASSWORD)
@@ -121,4 +123,5 @@ self.path)
 
 server_addr = ('', PORT)
 httpd = http.server.HTTPServer(server_addr, RequestHandler)
+httpd.socket = ssl.wrap_socket(httpd.socket, keyfile=KEYFILE, certfile=CERTFILE, server_side=True)
 httpd.serve_forever()
