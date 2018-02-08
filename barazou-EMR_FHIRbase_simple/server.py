@@ -71,17 +71,18 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
             return True
         # Capabilities
         ## GET [base]/metadata
-        path_capabilities = re.match('(?P<base>[^?/]+)/metadata$', self.path)
-        if path_capabilities:
-            d = path_capabilities.groupdict()
-            #s = tuple([json.dumps({})])
-            #db_cur.execute('', s)
-            result = db_cur.fetchall()
-            self.send_response(400)
-            self.send_header('Content-type', 'application/fhir+json')
-            self.end_headers()
-            self.wfile.write(bytes(json.dumps(result), 'utf-8'))
-            return True
+        # FHIRbase dosn't seem to support capability reporting (yet)
+        #path_capabilities = re.match('(?P<base>[^?/]+)/metadata$', self.path)
+        #if path_capabilities:
+        #    d = path_capabilities.groupdict()
+        #    #s = tuple([json.dumps({})])
+        #    #db_cur.execute('', s)
+        #    result = db_cur.fetchall()
+        #    self.send_response(400)
+        #    self.send_header('Content-type', 'application/fhir+json')
+        #    self.end_headers()
+        #    self.wfile.write(bytes(json.dumps(result), 'utf-8'))
+        #    return True
     def do_PUT(self):
         ##PUT [base]/[type]/[id]
         path_update = re.match('(?P<base>[^?/]+)/(?P<type>[^?/]+)/(?P<id>[^?/]+)$', 
@@ -90,9 +91,8 @@ self.path)
             # Check input JSON against corresponding schema before insertion
             input = json.loads(self.rfile.read())
             type = input["resourceType"]
-        ##build JSON template name from resource type string
-        ##check schema using jsonschema
-        jsonschema.validate(input, schema)
+            schema = json.loads(open(SCHEMADIR+type+".schema.json").read())
+            jsonschema.validate(input, schema)
         # Try to create storage for resource type each time storage is attempted;
         # alternatively, create all types of storage on creation of database
         pass
@@ -106,7 +106,6 @@ self.path)
         pass
     def do_PATCH(self):
         pass
-
 
 server_addr = ('', PORT)
 httpd = http.server.HTTPServer(server_addr, RequestHandler)
