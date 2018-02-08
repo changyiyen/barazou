@@ -1,8 +1,8 @@
 # EMR-FHIRbase
 
-## EMR-FHIRbase - an electronic medical records server based on [FHIRbase]
-## (https://fhirbase.github.io) that tries to be [FHIR-compliant]
-## (https://www.hl7.org/fhir/)
+## EMR-FHIRbase - an electronic medical records server based on [FHIRbase] 
+(https://fhirbase.github.io) that tries to be [FHIR-compliant] 
+(https://www.hl7.org/fhir/)
 
 ### Introduction
 

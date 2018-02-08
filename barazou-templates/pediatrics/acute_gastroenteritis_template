@@ -1,0 +1,11 @@
+{# Template is currently in raw text for more flexibility in various use cases #}
+  This is a {{ age.year }}-year-old {{ gender }}
+{# "boy" or "girl" #} with a history of {% for item in history %}
+{{ history }} {% endfor %}.
+{# select relevant history; in this case, e.g., immunodeficiency, toxic
+megacolon, gastrointestinal malformations, etc. #}
+{{ gender.possessive }} development was {{ development.status }} {# normal, precocious or 
+stunted #}
+and {{ gender.possessive }} {# "his" / "her" #} diet was {{ diet.amount }}
+{# note if diet is proper for age #}. The patient was brought to our
+hospital for {{ chief_complaints }}.

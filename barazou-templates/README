@@ -1,0 +1,26 @@
+README for barazou-templates
+=====
+1. Introduction
+
+  barazou-templates is a clinical note generator based on Jinja2 that takes a
+pre-written template, queries a (FHIR-compliant) EMR database for the values,
+fills in the blanks and prints the results.
+
+2. Dependencies
+
+  Jinja2 is required as a crucial component.
+
+3. Available variables
+  (1) Epidemiological data
+    - dictionay name: 'patient'
+    - key / value pairs:
+      * 'age' / age (years)
+      * 'gender' / 'man'|'woman'|'boy'|'girl'
+      * 'height' / height (cm)
+      * 'weight' / weight (kg)
+  (2) Lab values
+    - dictionary name: <lab_test_name>
+    - key / value pairs:
+      * 'latest': latest value
+      * 'admission': value at admission
+      * 'unit': unit of measurement

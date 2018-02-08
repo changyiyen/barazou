@@ -120,7 +120,6 @@ self.path)
     def do_PATCH(self):
         pass
 
-
 server_addr = ('', PORT)
 httpd = http.server.HTTPServer(server_addr, RequestHandler)
 httpd.socket = ssl.wrap_socket(httpd.socket, keyfile=KEYFILE, certfile=CERTFILE, server_side=True)
