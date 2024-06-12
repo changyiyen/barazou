@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAS28 Score Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 20px;
+    }
+    .map-container {
+        display: inline-block;
+		width: 30%;
+        margin: 10px;
+    }
+    svg {
+        border: 1px solid #000;
+    }
+	circle {
+	    stroke: green;
+		stroke-width: 3;
+		fill: #ffffff;
+	}
+    .selected {
+        fill: red;
+    }
+    .output {
+        margin: 20px;
+        font-size: 1.2em;
+    }
+    .das28-crp-score {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin: 20px;
+    }
+	.das28-esr-score {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin: 20px;
+    }
+</style>
+</head>
+<body>
+
+<h1>DAS28 Score Calculator</h1>
+
+<div class="das28-crp-score" id="das28-crp-score">DAS28-CRP Score: </div>
+<div class="das28-esr-score" id="das28-esr-score">DAS28-ESR Score: </div>
+
+<div>
+    <label for="crp">C-reactive protein (mg/L): </label>
+    <input type="number" id="crp" min="0" step="0.1">
+</div>
+<div>
+    <label for="esr">Erythrocyte sedimentation rate (mm/hr): </label>
+    <input type="number" id="esr" min="0" step="0.1">
+</div>
+<div>
+	<label for="ga">Physician's global assessment (0-100): </label>
+    <input type="number" id="ga" min="0" max="100">
+</div>
+
+<button onclick="calculateDAS28()">Calculate DAS28-CRP</button>
+<button onclick="calculateDAS28ESR()">Calculate DAS28-ESR</button>
+
+<div class="output">
+    <div id="painful-joints">Painful joints: </div>
+    <div id="swollen-joints">Swollen joints: </div>
+</div>
+
+<div class="map-container">
+    <h2>Painful Joints</h2>
+	<svg
+	   id="svg"
+	   version="1.1"
+	   style="display: block; background: rgb(255, 255, 255);"
+	   viewBox="0 0 212 372"
+	   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+	   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+	   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+	   xmlns="http://www.w3.org/2000/svg"
+	   xmlns:svg="http://www.w3.org/2000/svg">
+	  <defs
+		 id="defs6" />
+	  <sodipodi:namedview
+		 id="namedview6"
+		 pagecolor="#ffffff"
+		 bordercolor="#000000"
+		 borderopacity="0.25"
+		 inkscape:showpageshadow="2"
+		 inkscape:pageopacity="0.0"
+		 inkscape:pagecheckerboard="0"
+		 inkscape:deskcolor="#d1d1d1"
+		 inkscape:zoom="1.193976"
+		 inkscape:cx="-76.634707"
+		 inkscape:cy="234.92935"
+		 inkscape:window-width="1366"
+		 inkscape:window-height="745"
+		 inkscape:window-x="-8"
+		 inkscape:window-y="-8"
+		 inkscape:window-maximized="1"
+		 inkscape:current-layer="svg" />
+	  <path
+		 d="M0,0 L3,3 L3,13 L1,17 L0,14 L1,12 L1,5 Z "
+		 transform="translate(160,104)"
+		 style="fill: #000000;"
+		 id="path1" />
+	  <path
+		 d="M0,0 L2,0 L1,2 Z "
+		 transform="translate(158,102)"
+		 style="fill: #000000;"
+		 id="path2" />
+	  <path
+		 d="M0,0 L11,0 L10,3 L8,25 L12,27 L15,32 L16,40 L12,48 L5,57 L6,67 L10,83 L10,89 L7,94 L11,99 L11,104 L9,107 L9,119 L12,122 L12,128 L10,130 L10,142 L11,143 L10,150 L9,156 L5,156 L2,148 L3,135 L1,128 L0,123 L1,121 L2,110 L0,110 L0,121 L-4,125 L-7,137 L-7,145 L-10,148 L-10,159 L-11,167 L-16,166 L-17,155 L-16,154 L-16,146 L-17,142 L-14,136 L-12,127 L-12,121 L-13,119 L-16,122 L-19,128 L-21,135 L-24,139 L-25,146 L-26,153 L-28,158 L-31,157 L-32,147 L-30,143 L-29,134 L-30,130 L-25,124 L-23,119 L-24,114 L-27,115 L-30,121 L-32,128 L-35,131 L-37,138 L-38,142 L-40,148 L-44,148 L-44,136 L-41,131 L-40,122 L-36,118 L-34,112 L-34,107 L-38,111 L-42,120 L-45,124 L-46,131 L-50,138 L-54,137 L-53,127 L-51,123 L-50,113 L-44,108 L-41,101 L-39,96 L-35,93 L-27,94 L-12,87 L-10,87 L-6,71 L-3,65 L-7,48 L-11,44 L-12,41 L-12,33 L-8,26 L-2,23 Z M3,1 L1,8 L1,23 L6,23 L7,17 L7,2 Z M0,24 L-6,27 L-10,32 L-10,42 L-4,49 L-1,50 L6,50 L12,45 L14,41 L14,33 L10,27 L5,24 Z M-3,50 L-4,53 L3,76 L6,75 L0,51 Z M3,51 L3,55 L6,52 Z M-2,68 L-5,73 L-5,76 L1,75 L-1,68 Z M-3,77 L-7,81 L-8,86 L-6,91 L-1,94 L5,93 L8,89 L8,82 L4,77 Z M-12,89 L-28,96 L-28,102 L-23,105 L-21,108 L-13,109 L-11,114 L-3,113 L-1,108 L-3,104 L-3,98 L-2,95 L-6,93 L-8,89 Z M-36,95 L-38,97 L-38,102 L-36,104 L-31,103 L-30,102 L-30,97 L-32,95 Z M1,95 L-2,98 L-2,105 L1,107 L6,107 L9,104 L8,97 L5,95 Z M-39,104 L-43,109 L-43,112 L-39,110 L-37,107 L-37,104 Z M-30,104 L-32,110 L-30,112 L-25,112 L-23,110 L-24,106 L-25,104 Z M-19,109 L-21,112 L-20,117 L-15,118 L-13,116 L-14,109 Z M4,109 L4,119 L6,118 L6,109 Z M-47,113 L-49,115 L-48,119 L-44,120 L-42,116 L-45,113 Z M-32,113 L-34,117 L-34,120 L-31,119 L-30,113 Z M-7,114 L-11,118 L-9,122 L-4,123 L-2,121 L-3,115 Z M-20,119 L-23,124 L-23,127 L-20,126 L-18,119 Z M-37,121 L-39,125 L-37,128 L-33,126 L-32,123 Z M6,120 L2,123 L3,128 L8,129 L10,127 L10,122 Z M-48,122 L-48,125 Z M-9,124 L-12,136 L-12,138 L-9,138 L-7,129 L-7,124 Z M-50,127 L-51,131 L-48,131 L-48,127 Z M-26,128 L-28,130 L-27,134 L-24,135 L-22,134 L-23,129 Z M-38,129 L-37,131 Z M-39,131 L-38,134 Z M6,132 L5,140 L7,140 L7,132 Z M-42,137 L-42,141 L-39,141 L-40,137 Z M-13,140 L-15,141 L-14,146 L-9,145 L-10,140 Z M6,142 L4,143 L4,148 L8,149 L10,145 L8,142 Z M-42,144 Z M-30,147 L-30,151 L-27,151 L-27,147 Z M6,152 L6,154 L8,153 Z M-14,155 L-16,158 L-12,159 L-13,155 Z M-14,162 L-13,165 Z "
+		 transform="translate(57,78)"
+		 style="fill: #000000;"
+		 id="path3" />
+	  <path
+		 d="M0,0 L9,0 L10,72 L30,73 L34,78 L35,87 L29,96 L27,96 L27,98 L31,100 L34,105 L34,115 L30,121 L30,139 L31,168 L37,172 L40,178 L39,184 L37,192 L31,234 L37,239 L38,243 L42,245 L44,248 L45,255 L47,260 L57,265 L68,264 L70,266 L71,277 L73,281 L73,291 L74,296 L69,297 L67,291 L65,286 L65,275 L61,275 L60,279 L62,284 L63,288 L62,295 L63,300 L58,301 L56,297 L56,291 L54,289 L55,279 L48,277 L48,286 L51,287 L50,296 L51,303 L46,304 L45,303 L44,294 L43,292 L43,281 L38,280 L36,279 L37,287 L39,292 L37,296 L38,304 L36,306 L32,305 L31,301 L31,294 L30,289 L31,282 L24,281 L25,287 L28,292 L25,297 L19,297 L16,294 L17,283 L14,280 L13,271 L13,249 L16,245 L18,238 L21,235 L19,187 L17,183 L17,176 L20,171 L20,121 L15,119 L10,117 L7,114 L7,111 L5,111 L3,116 L-2,119 L-7,118 L-8,119 L-8,168 L-3,170 L0,173 L1,176 L1,183 L-1,187 L-3,215 L-3,236 L0,240 L2,246 L4,248 L4,281 L1,286 L3,290 L2,295 L0,297 L-6,297 L-8,295 L-8,288 L-5,287 L-6,280 L-11,283 L-12,287 L-11,292 L-12,294 L-12,303 L-16,306 L-19,304 L-19,294 L-20,289 L-18,286 L-19,280 L-24,282 L-24,292 L-25,294 L-25,301 L-27,304 L-31,303 L-32,298 L-31,293 L-32,292 L-32,287 L-29,283 L-30,277 L-35,280 L-35,289 L-37,291 L-37,299 L-39,301 L-43,300 L-44,296 L-43,295 L-43,289 L-44,286 L-42,283 L-42,275 L-45,276 L-46,280 L-45,283 L-47,287 L-48,295 L-50,297 L-55,296 L-54,285 L-53,279 L-52,278 L-52,268 L-50,265 L-45,264 L-40,265 L-30,260 L-27,253 L-26,246 L-21,242 L-18,237 L-14,234 L-17,208 L-20,186 L-22,181 L-21,174 L-18,170 L-18,122 L-23,118 L-25,112 L-24,104 L-21,99 L-19,98 L-21,94 L-25,88 L-25,79 L-21,73 L-1,72 Z M2,2 L1,9 L4,11 L7,11 L7,2 Z M2,12 L2,14 L7,14 L7,12 Z M2,16 L1,17 L1,50 L2,51 L7,51 L7,16 Z M2,53 L1,54 L1,66 L0,88 L-6,101 L-6,115 L-4,117 L0,116 L4,111 L5,108 L7,108 L11,116 L16,117 L16,104 L9,87 L8,54 L7,53 Z M-19,74 L-23,79 L-24,85 L-20,93 L-13,97 L-5,90 L-3,86 L-6,80 L-8,74 Z M17,74 L14,85 L13,89 L21,97 L27,95 L32,89 L33,87 L33,80 L30,75 L28,74 Z M-5,75 L-4,83 L-1,85 L0,84 L0,76 Z M10,75 L9,76 L9,84 L13,84 L15,79 L14,75 Z M12,91 L16,101 L20,99 L18,95 L14,91 Z M-5,92 L-10,97 L-9,100 L-7,100 L-4,94 Z M-18,99 L-22,103 L-23,106 L-23,113 L-21,118 L-18,120 L-12,120 L-8,115 L-7,113 L-7,106 L-11,100 L-12,99 Z M22,99 L18,103 L17,105 L17,114 L20,119 L21,120 L28,120 L32,115 L32,105 L29,100 Z M-12,121 L-15,123 L-16,167 L-14,169 L-10,167 L-10,124 Z M24,122 L23,123 L23,169 L28,168 L28,134 L27,122 Z M-13,169 L-18,172 L-20,176 L-20,182 L-17,187 L-13,189 L-7,189 L-2,185 L-1,183 L-1,175 L-6,170 Z M25,170 L22,171 L19,175 L19,184 L24,189 L32,189 L37,185 L38,177 L34,171 L32,170 Z M-17,189 L-16,202 L-12,232 L-10,231 L-8,192 Z M-6,190 L-7,193 L-9,233 L-7,235 L-6,234 L-4,206 L-4,190 Z M22,190 L21,192 L23,234 L26,234 L25,199 L24,190 Z M32,190 L26,191 L27,224 L28,233 L29,233 L35,193 L35,190 Z M-13,236 L-18,239 L-19,244 L-14,249 L-6,249 L-1,244 L-2,239 L-6,236 Z M24,236 L19,240 L19,246 L23,249 L28,250 L33,248 L36,244 L35,239 L30,236 Z M-23,245 L-25,248 L-24,253 L-20,256 L-15,257 L-2,257 L2,254 L2,248 L-2,247 L-7,250 L-16,249 L-20,245 Z M37,245 L33,249 L31,250 L24,250 L19,247 L15,249 L14,252 L16,256 L18,257 L34,257 L40,254 L42,251 L41,246 Z M-26,255 L-27,259 L-21,264 L-12,267 L-3,266 L2,263 L3,260 L2,258 L-11,258 L-21,256 Z M40,255 L32,258 L15,258 L14,262 L17,265 L25,267 L34,266 L42,262 L42,260 L44,260 L43,255 Z M-28,261 L-40,267 L-41,269 L-32,270 L-31,275 L-27,272 L-22,272 L-18,275 L-16,273 L-11,273 L-7,277 L-5,274 L2,271 L2,266 L-5,267 L-14,267 L-25,263 Z M43,262 L33,267 L21,267 L15,266 L15,271 L23,274 L26,277 L28,273 L34,272 L37,274 L41,271 L46,272 L50,274 L52,269 L55,268 L55,266 L48,262 Z M64,265 L61,267 L62,273 L67,273 L69,269 L68,266 Z M-48,266 L-50,267 L-50,272 L-48,274 L-43,273 L-43,267 Z M54,269 L51,274 L53,277 L58,276 L59,271 L57,269 Z M-39,270 L-41,275 L-38,278 L-34,277 L-33,272 L-35,270 Z M40,272 L39,278 L41,280 L45,279 L46,278 L46,273 L45,272 Z M-27,273 L-28,274 L-28,279 L-24,281 L-21,279 L-21,274 L-22,273 Z M18,273 L15,276 L17,281 L22,280 L23,275 L21,273 Z M29,273 L28,274 L28,279 L32,281 L35,279 L35,274 L34,273 Z M-16,274 L-17,275 L-17,280 L-13,282 L-10,280 L-10,275 L-11,274 Z M-3,274 L-5,276 L-4,281 L1,282 L3,277 L1,274 Z M67,275 L67,277 L69,276 Z M-49,276 L-48,278 Z M57,280 L58,282 Z M-50,280 L-52,281 L-51,285 L-47,284 L-49,280 Z M67,281 L67,285 L71,285 L71,281 Z M33,282 L33,287 L34,287 L34,282 Z M-15,283 L-15,286 Z M20,283 L20,286 L22,285 Z M-40,284 L-41,289 L-37,288 L-38,284 Z M-3,284 L-1,286 L-1,284 Z M57,284 L56,289 L61,288 L60,284 Z M-29,287 L-30,291 L-26,292 L-27,287 Z M46,287 L45,292 L49,292 L48,287 Z M-51,288 L-50,290 Z M-5,288 L-7,293 L-4,296 L0,295 L1,290 L-1,288 Z M20,288 L18,290 L19,295 L23,296 L26,293 L25,289 Z M34,288 L32,292 L35,294 L37,292 L37,289 Z M69,288 Z M-16,288 L-18,289 L-17,293 L-13,292 L-13,289 Z M-53,293 L-53,296 L-50,295 L-50,293 Z M70,293 L70,296 L73,295 L72,293 Z M-41,296 L-42,299 L-39,298 L-39,296 Z M34,296 L35,298 Z M59,296 L58,299 L61,299 L61,296 Z M-30,299 L-30,302 L-27,301 L-28,299 Z M47,299 L47,302 L49,302 L49,299 Z M34,300 L34,304 L36,304 L35,300 Z M-17,301 L-17,303 L-14,303 L-14,301 Z "
+		 transform="translate(97,64)"
+		 style="fill: #000000;"
+		 id="path4" />
+	  <path
+		 d="M0,0 L7,2 L10,8 L18,9 L19,8 L25,8 L28,11 L27,18 L25,19 L19,19 L16,15 L16,12 L8,11 L8,26 L2,33 L0,32 L5,26 L6,18 L5,16 L-5,14 L-8,10 L-12,11 L-15,13 L-17,19 L-16,26 L-11,33 L-15,32 L-19,26 L-19,16 L-15,10 L-8,6 L-3,1 Z M-1,2 L-6,6 L-5,11 L-1,14 L5,13 L7,11 L7,5 L3,2 Z M20,10 L18,12 L19,17 L24,18 L26,16 L26,11 L25,10 Z "
+		 transform="translate(68,45)"
+		 style="fill: #000000;"
+		 id="path5" />
+	  <path
+		 d="M0,0 L13,0 L21,5 L25,12 L26,18 L30,20 L31,25 L27,29 L20,31 L12,36 L12,49 L14,47 L20,47 L24,49 L30,48 L32,42 L35,40 L42,40 L51,43 L57,46 L61,51 L62,60 L59,66 L56,69 L56,82 L57,92 L63,95 L61,96 L59,95 L50,95 L45,99 L43,104 L44,111 L47,116 L50,118 L59,118 L63,115 L65,116 L62,124 L60,135 L64,144 L66,155 L85,164 L93,163 L96,166 L98,173 L102,179 L107,183 L107,191 L110,197 L110,207 L106,207 L103,201 L101,192 L97,187 L94,180 L91,176 L91,183 L94,189 L97,191 L97,198 L100,205 L101,206 L101,217 L96,216 L94,211 L92,199 L88,197 L86,189 L83,184 L80,184 L80,190 L83,196 L86,198 L86,208 L89,217 L88,227 L84,227 L81,220 L81,210 L80,206 L77,203 L75,195 L72,189 L69,188 L69,196 L72,208 L73,209 L73,223 L74,229 L72,236 L68,235 L67,224 L67,216 L65,216 L64,210 L63,202 L61,194 L57,190 L57,179 L55,179 L56,191 L57,195 L54,201 L55,217 L53,220 L51,226 L48,226 L46,217 L47,210 L47,199 L45,197 L45,191 L48,188 L48,177 L46,173 L47,166 L49,162 L46,158 L47,149 L49,143 L52,131 L51,125 L42,113 L41,111 L41,102 L44,97 L46,90 L45,72 L37,67 L34,62 L33,53 L31,51 L24,52 L21,57 L16,59 L10,57 L3,57 L2,35 L-3,33 L-7,30 L-13,28 L-15,26 L-15,20 L-12,17 L-9,8 L-4,3 Z M3,1 L-5,6 L-9,12 L-9,17 L-4,22 L-5,29 L0,33 L11,31 L11,33 L16,32 L20,27 L19,23 L21,19 L23,18 L23,12 L19,6 L13,2 L10,1 Z M-11,19 L-13,21 L-13,26 L-12,27 L-7,27 L-5,22 L-7,19 Z M24,19 L21,21 L21,26 L22,27 L27,27 L29,25 L28,21 Z M5,32 L4,39 L4,54 L9,55 L9,32 Z M36,41 L32,45 L33,51 L36,53 L43,52 L45,50 L44,43 L40,41 Z M48,45 L44,52 L36,55 L35,60 L38,66 L46,70 L53,69 L58,65 L60,61 L60,53 L56,47 L52,45 Z M15,49 L13,51 L14,56 L18,57 L21,55 L21,50 L20,49 Z M48,71 L48,92 L52,93 L54,92 L54,74 L53,71 Z M51,120 L52,124 L54,124 L53,120 Z M58,120 L56,122 L51,143 L51,145 L54,145 L60,125 L60,120 Z M58,137 L56,142 L56,145 L62,147 L61,141 Z M54,146 L50,148 L48,151 L48,158 L53,163 L59,163 L63,159 L64,153 L61,148 L57,146 Z M65,158 L61,163 L59,164 L60,174 L58,176 L59,181 L66,183 L68,183 L71,178 L69,181 L70,185 L72,187 L77,186 L78,182 L76,178 L78,178 L81,173 L85,171 L84,166 L68,158 Z M51,165 L48,168 L49,175 L52,177 L57,176 L59,174 L59,167 L57,165 Z M88,165 L86,167 L87,172 L92,174 L95,170 L93,165 Z M82,173 L80,175 L80,180 L82,182 L87,181 L88,180 L88,175 L86,175 L86,173 Z M94,173 L95,178 L98,182 L100,182 L99,178 Z M51,178 L51,188 L53,188 L53,179 Z M61,183 L59,185 L59,190 L61,192 L66,191 L67,190 L67,185 L65,183 Z M86,183 L88,189 L90,190 L89,183 Z M100,183 L100,188 L104,189 L105,184 Z M76,188 L75,191 L78,196 L80,196 L79,191 Z M48,190 L46,194 L48,198 L53,198 L55,196 L54,191 L53,190 Z M90,191 L89,195 L90,197 L95,196 L94,191 Z M104,192 L105,194 Z M65,193 L64,198 L66,207 L69,207 L67,195 Z M105,197 L104,200 L107,201 L108,197 Z M79,198 L79,203 L83,204 L85,200 L84,198 Z M94,199 L95,204 L96,201 Z M50,201 L50,209 L52,209 L52,201 Z M96,207 L97,211 L99,211 L99,207 Z M67,209 L66,214 L71,215 L72,211 L70,209 Z M48,212 L47,215 L49,218 L53,217 L54,214 L53,212 Z M84,216 L84,220 L87,220 L87,217 Z M69,225 L69,229 L72,228 L72,225 Z M70,231 L71,233 Z "
+		 transform="translate(95,6)"
+		 style="fill: #000000;"
+		 id="path6" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right shoulder"
+		 cx="63.1"
+		 cy="66.0"
+		 r="11.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right elbow"
+		 cx="59.2"
+		 cy="115.0"
+		 r="11.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left shoulder"
+		 cx="142.2"
+		 cy="66.0"
+		 r="11.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left elbow"
+		 cx="149.2"
+		 cy="115.0"
+		 r="11.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right knee"
+		 cx="86.9"
+		 cy="244.0"
+		 r="9.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left knee"
+		 cx="125.0"
+		 cy="244.0"
+		 r="9.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right wrist"
+		 cx="57.0"
+		 cy="162.0"
+		 r="8.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right thumb MCP"
+		 cx="64.061302"
+		 cy="200.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right index MCP"
+		 cx="50.920536"
+		 cy="194.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right middle MCP"
+		 cx="39.920536"
+		 cy="189.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right 4th MCP"
+		 cx="28.920534"
+		 cy="185.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right 5th MCP"
+		 cx="21.920534"
+		 cy="175.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right thumb IP"
+		 cx="63.920536"
+		 cy="222.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right index PIP"
+		 cx="44.920536"
+		 cy="220.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right middle PIP"
+		 cx="32.920536"
+		 cy="208.5"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right 4th PIP"
+		 cx="20.920534"
+		 cy="202.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="right 5th PIP"
+		 cx="10.920534"
+		 cy="194.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left wrist"
+		 cx="150.0"
+		 cy="162.0"
+		 r="8.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left thumb MCP"
+		 cx="144.92053"
+		 cy="200.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left index MCP"
+		 cx="157.92053"
+		 cy="194.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left middle MCP"
+		 cx="168.92053"
+		 cy="189.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left 4th MCP"
+		 cx="178.92053"
+		 cy="183.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left 5th MCP"
+		 cx="184.92053"
+		 cy="174.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left thumb IP"
+		 cx="145.92053"
+		 cy="220.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left index PIP"
+		 cx="163.92053"
+		 cy="217.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left middle PIP"
+		 cx="174.92053"
+		 cy="208.5"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left 4th PIP"
+		 cx="186.92053"
+		 cy="199.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="painful_joint"
+		 id="left 5th PIP"
+		 cx="197.92053"
+		 cy="191.92053"
+		 r="4.9205346" />
+	</svg>
+</div>
+
+<div class="map-container">
+    <h2>Swollen Joints</h2>
+	<svg
+	   id="svg"
+	   version="1.1"
+	   style="display: block; background: rgb(255, 255, 255);"
+	   viewBox="0 0 212 372"
+	   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+	   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+	   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+	   xmlns="http://www.w3.org/2000/svg"
+	   xmlns:svg="http://www.w3.org/2000/svg">
+	  <defs
+		 id="defs6" />
+	  <sodipodi:namedview
+		 id="namedview6"
+		 pagecolor="#ffffff"
+		 bordercolor="#000000"
+		 borderopacity="0.25"
+		 inkscape:showpageshadow="2"
+		 inkscape:pageopacity="0.0"
+		 inkscape:pagecheckerboard="0"
+		 inkscape:deskcolor="#d1d1d1"
+		 inkscape:zoom="1.193976"
+		 inkscape:cx="-76.634707"
+		 inkscape:cy="234.92935"
+		 inkscape:window-width="1366"
+		 inkscape:window-height="745"
+		 inkscape:window-x="-8"
+		 inkscape:window-y="-8"
+		 inkscape:window-maximized="1"
+		 inkscape:current-layer="svg" />
+	  <path
+		 d="M0,0 L3,3 L3,13 L1,17 L0,14 L1,12 L1,5 Z "
+		 transform="translate(160,104)"
+		 style="fill: #000000;"
+		 id="path1" />
+	  <path
+		 d="M0,0 L2,0 L1,2 Z "
+		 transform="translate(158,102)"
+		 style="fill: #000000;"
+		 id="path2" />
+	  <path
+		 d="M0,0 L11,0 L10,3 L8,25 L12,27 L15,32 L16,40 L12,48 L5,57 L6,67 L10,83 L10,89 L7,94 L11,99 L11,104 L9,107 L9,119 L12,122 L12,128 L10,130 L10,142 L11,143 L10,150 L9,156 L5,156 L2,148 L3,135 L1,128 L0,123 L1,121 L2,110 L0,110 L0,121 L-4,125 L-7,137 L-7,145 L-10,148 L-10,159 L-11,167 L-16,166 L-17,155 L-16,154 L-16,146 L-17,142 L-14,136 L-12,127 L-12,121 L-13,119 L-16,122 L-19,128 L-21,135 L-24,139 L-25,146 L-26,153 L-28,158 L-31,157 L-32,147 L-30,143 L-29,134 L-30,130 L-25,124 L-23,119 L-24,114 L-27,115 L-30,121 L-32,128 L-35,131 L-37,138 L-38,142 L-40,148 L-44,148 L-44,136 L-41,131 L-40,122 L-36,118 L-34,112 L-34,107 L-38,111 L-42,120 L-45,124 L-46,131 L-50,138 L-54,137 L-53,127 L-51,123 L-50,113 L-44,108 L-41,101 L-39,96 L-35,93 L-27,94 L-12,87 L-10,87 L-6,71 L-3,65 L-7,48 L-11,44 L-12,41 L-12,33 L-8,26 L-2,23 Z M3,1 L1,8 L1,23 L6,23 L7,17 L7,2 Z M0,24 L-6,27 L-10,32 L-10,42 L-4,49 L-1,50 L6,50 L12,45 L14,41 L14,33 L10,27 L5,24 Z M-3,50 L-4,53 L3,76 L6,75 L0,51 Z M3,51 L3,55 L6,52 Z M-2,68 L-5,73 L-5,76 L1,75 L-1,68 Z M-3,77 L-7,81 L-8,86 L-6,91 L-1,94 L5,93 L8,89 L8,82 L4,77 Z M-12,89 L-28,96 L-28,102 L-23,105 L-21,108 L-13,109 L-11,114 L-3,113 L-1,108 L-3,104 L-3,98 L-2,95 L-6,93 L-8,89 Z M-36,95 L-38,97 L-38,102 L-36,104 L-31,103 L-30,102 L-30,97 L-32,95 Z M1,95 L-2,98 L-2,105 L1,107 L6,107 L9,104 L8,97 L5,95 Z M-39,104 L-43,109 L-43,112 L-39,110 L-37,107 L-37,104 Z M-30,104 L-32,110 L-30,112 L-25,112 L-23,110 L-24,106 L-25,104 Z M-19,109 L-21,112 L-20,117 L-15,118 L-13,116 L-14,109 Z M4,109 L4,119 L6,118 L6,109 Z M-47,113 L-49,115 L-48,119 L-44,120 L-42,116 L-45,113 Z M-32,113 L-34,117 L-34,120 L-31,119 L-30,113 Z M-7,114 L-11,118 L-9,122 L-4,123 L-2,121 L-3,115 Z M-20,119 L-23,124 L-23,127 L-20,126 L-18,119 Z M-37,121 L-39,125 L-37,128 L-33,126 L-32,123 Z M6,120 L2,123 L3,128 L8,129 L10,127 L10,122 Z M-48,122 L-48,125 Z M-9,124 L-12,136 L-12,138 L-9,138 L-7,129 L-7,124 Z M-50,127 L-51,131 L-48,131 L-48,127 Z M-26,128 L-28,130 L-27,134 L-24,135 L-22,134 L-23,129 Z M-38,129 L-37,131 Z M-39,131 L-38,134 Z M6,132 L5,140 L7,140 L7,132 Z M-42,137 L-42,141 L-39,141 L-40,137 Z M-13,140 L-15,141 L-14,146 L-9,145 L-10,140 Z M6,142 L4,143 L4,148 L8,149 L10,145 L8,142 Z M-42,144 Z M-30,147 L-30,151 L-27,151 L-27,147 Z M6,152 L6,154 L8,153 Z M-14,155 L-16,158 L-12,159 L-13,155 Z M-14,162 L-13,165 Z "
+		 transform="translate(57,78)"
+		 style="fill: #000000;"
+		 id="path3" />
+	  <path
+		 d="M0,0 L9,0 L10,72 L30,73 L34,78 L35,87 L29,96 L27,96 L27,98 L31,100 L34,105 L34,115 L30,121 L30,139 L31,168 L37,172 L40,178 L39,184 L37,192 L31,234 L37,239 L38,243 L42,245 L44,248 L45,255 L47,260 L57,265 L68,264 L70,266 L71,277 L73,281 L73,291 L74,296 L69,297 L67,291 L65,286 L65,275 L61,275 L60,279 L62,284 L63,288 L62,295 L63,300 L58,301 L56,297 L56,291 L54,289 L55,279 L48,277 L48,286 L51,287 L50,296 L51,303 L46,304 L45,303 L44,294 L43,292 L43,281 L38,280 L36,279 L37,287 L39,292 L37,296 L38,304 L36,306 L32,305 L31,301 L31,294 L30,289 L31,282 L24,281 L25,287 L28,292 L25,297 L19,297 L16,294 L17,283 L14,280 L13,271 L13,249 L16,245 L18,238 L21,235 L19,187 L17,183 L17,176 L20,171 L20,121 L15,119 L10,117 L7,114 L7,111 L5,111 L3,116 L-2,119 L-7,118 L-8,119 L-8,168 L-3,170 L0,173 L1,176 L1,183 L-1,187 L-3,215 L-3,236 L0,240 L2,246 L4,248 L4,281 L1,286 L3,290 L2,295 L0,297 L-6,297 L-8,295 L-8,288 L-5,287 L-6,280 L-11,283 L-12,287 L-11,292 L-12,294 L-12,303 L-16,306 L-19,304 L-19,294 L-20,289 L-18,286 L-19,280 L-24,282 L-24,292 L-25,294 L-25,301 L-27,304 L-31,303 L-32,298 L-31,293 L-32,292 L-32,287 L-29,283 L-30,277 L-35,280 L-35,289 L-37,291 L-37,299 L-39,301 L-43,300 L-44,296 L-43,295 L-43,289 L-44,286 L-42,283 L-42,275 L-45,276 L-46,280 L-45,283 L-47,287 L-48,295 L-50,297 L-55,296 L-54,285 L-53,279 L-52,278 L-52,268 L-50,265 L-45,264 L-40,265 L-30,260 L-27,253 L-26,246 L-21,242 L-18,237 L-14,234 L-17,208 L-20,186 L-22,181 L-21,174 L-18,170 L-18,122 L-23,118 L-25,112 L-24,104 L-21,99 L-19,98 L-21,94 L-25,88 L-25,79 L-21,73 L-1,72 Z M2,2 L1,9 L4,11 L7,11 L7,2 Z M2,12 L2,14 L7,14 L7,12 Z M2,16 L1,17 L1,50 L2,51 L7,51 L7,16 Z M2,53 L1,54 L1,66 L0,88 L-6,101 L-6,115 L-4,117 L0,116 L4,111 L5,108 L7,108 L11,116 L16,117 L16,104 L9,87 L8,54 L7,53 Z M-19,74 L-23,79 L-24,85 L-20,93 L-13,97 L-5,90 L-3,86 L-6,80 L-8,74 Z M17,74 L14,85 L13,89 L21,97 L27,95 L32,89 L33,87 L33,80 L30,75 L28,74 Z M-5,75 L-4,83 L-1,85 L0,84 L0,76 Z M10,75 L9,76 L9,84 L13,84 L15,79 L14,75 Z M12,91 L16,101 L20,99 L18,95 L14,91 Z M-5,92 L-10,97 L-9,100 L-7,100 L-4,94 Z M-18,99 L-22,103 L-23,106 L-23,113 L-21,118 L-18,120 L-12,120 L-8,115 L-7,113 L-7,106 L-11,100 L-12,99 Z M22,99 L18,103 L17,105 L17,114 L20,119 L21,120 L28,120 L32,115 L32,105 L29,100 Z M-12,121 L-15,123 L-16,167 L-14,169 L-10,167 L-10,124 Z M24,122 L23,123 L23,169 L28,168 L28,134 L27,122 Z M-13,169 L-18,172 L-20,176 L-20,182 L-17,187 L-13,189 L-7,189 L-2,185 L-1,183 L-1,175 L-6,170 Z M25,170 L22,171 L19,175 L19,184 L24,189 L32,189 L37,185 L38,177 L34,171 L32,170 Z M-17,189 L-16,202 L-12,232 L-10,231 L-8,192 Z M-6,190 L-7,193 L-9,233 L-7,235 L-6,234 L-4,206 L-4,190 Z M22,190 L21,192 L23,234 L26,234 L25,199 L24,190 Z M32,190 L26,191 L27,224 L28,233 L29,233 L35,193 L35,190 Z M-13,236 L-18,239 L-19,244 L-14,249 L-6,249 L-1,244 L-2,239 L-6,236 Z M24,236 L19,240 L19,246 L23,249 L28,250 L33,248 L36,244 L35,239 L30,236 Z M-23,245 L-25,248 L-24,253 L-20,256 L-15,257 L-2,257 L2,254 L2,248 L-2,247 L-7,250 L-16,249 L-20,245 Z M37,245 L33,249 L31,250 L24,250 L19,247 L15,249 L14,252 L16,256 L18,257 L34,257 L40,254 L42,251 L41,246 Z M-26,255 L-27,259 L-21,264 L-12,267 L-3,266 L2,263 L3,260 L2,258 L-11,258 L-21,256 Z M40,255 L32,258 L15,258 L14,262 L17,265 L25,267 L34,266 L42,262 L42,260 L44,260 L43,255 Z M-28,261 L-40,267 L-41,269 L-32,270 L-31,275 L-27,272 L-22,272 L-18,275 L-16,273 L-11,273 L-7,277 L-5,274 L2,271 L2,266 L-5,267 L-14,267 L-25,263 Z M43,262 L33,267 L21,267 L15,266 L15,271 L23,274 L26,277 L28,273 L34,272 L37,274 L41,271 L46,272 L50,274 L52,269 L55,268 L55,266 L48,262 Z M64,265 L61,267 L62,273 L67,273 L69,269 L68,266 Z M-48,266 L-50,267 L-50,272 L-48,274 L-43,273 L-43,267 Z M54,269 L51,274 L53,277 L58,276 L59,271 L57,269 Z M-39,270 L-41,275 L-38,278 L-34,277 L-33,272 L-35,270 Z M40,272 L39,278 L41,280 L45,279 L46,278 L46,273 L45,272 Z M-27,273 L-28,274 L-28,279 L-24,281 L-21,279 L-21,274 L-22,273 Z M18,273 L15,276 L17,281 L22,280 L23,275 L21,273 Z M29,273 L28,274 L28,279 L32,281 L35,279 L35,274 L34,273 Z M-16,274 L-17,275 L-17,280 L-13,282 L-10,280 L-10,275 L-11,274 Z M-3,274 L-5,276 L-4,281 L1,282 L3,277 L1,274 Z M67,275 L67,277 L69,276 Z M-49,276 L-48,278 Z M57,280 L58,282 Z M-50,280 L-52,281 L-51,285 L-47,284 L-49,280 Z M67,281 L67,285 L71,285 L71,281 Z M33,282 L33,287 L34,287 L34,282 Z M-15,283 L-15,286 Z M20,283 L20,286 L22,285 Z M-40,284 L-41,289 L-37,288 L-38,284 Z M-3,284 L-1,286 L-1,284 Z M57,284 L56,289 L61,288 L60,284 Z M-29,287 L-30,291 L-26,292 L-27,287 Z M46,287 L45,292 L49,292 L48,287 Z M-51,288 L-50,290 Z M-5,288 L-7,293 L-4,296 L0,295 L1,290 L-1,288 Z M20,288 L18,290 L19,295 L23,296 L26,293 L25,289 Z M34,288 L32,292 L35,294 L37,292 L37,289 Z M69,288 Z M-16,288 L-18,289 L-17,293 L-13,292 L-13,289 Z M-53,293 L-53,296 L-50,295 L-50,293 Z M70,293 L70,296 L73,295 L72,293 Z M-41,296 L-42,299 L-39,298 L-39,296 Z M34,296 L35,298 Z M59,296 L58,299 L61,299 L61,296 Z M-30,299 L-30,302 L-27,301 L-28,299 Z M47,299 L47,302 L49,302 L49,299 Z M34,300 L34,304 L36,304 L35,300 Z M-17,301 L-17,303 L-14,303 L-14,301 Z "
+		 transform="translate(97,64)"
+		 style="fill: #000000;"
+		 id="path4" />
+	  <path
+		 d="M0,0 L7,2 L10,8 L18,9 L19,8 L25,8 L28,11 L27,18 L25,19 L19,19 L16,15 L16,12 L8,11 L8,26 L2,33 L0,32 L5,26 L6,18 L5,16 L-5,14 L-8,10 L-12,11 L-15,13 L-17,19 L-16,26 L-11,33 L-15,32 L-19,26 L-19,16 L-15,10 L-8,6 L-3,1 Z M-1,2 L-6,6 L-5,11 L-1,14 L5,13 L7,11 L7,5 L3,2 Z M20,10 L18,12 L19,17 L24,18 L26,16 L26,11 L25,10 Z "
+		 transform="translate(68,45)"
+		 style="fill: #000000;"
+		 id="path5" />
+	  <path
+		 d="M0,0 L13,0 L21,5 L25,12 L26,18 L30,20 L31,25 L27,29 L20,31 L12,36 L12,49 L14,47 L20,47 L24,49 L30,48 L32,42 L35,40 L42,40 L51,43 L57,46 L61,51 L62,60 L59,66 L56,69 L56,82 L57,92 L63,95 L61,96 L59,95 L50,95 L45,99 L43,104 L44,111 L47,116 L50,118 L59,118 L63,115 L65,116 L62,124 L60,135 L64,144 L66,155 L85,164 L93,163 L96,166 L98,173 L102,179 L107,183 L107,191 L110,197 L110,207 L106,207 L103,201 L101,192 L97,187 L94,180 L91,176 L91,183 L94,189 L97,191 L97,198 L100,205 L101,206 L101,217 L96,216 L94,211 L92,199 L88,197 L86,189 L83,184 L80,184 L80,190 L83,196 L86,198 L86,208 L89,217 L88,227 L84,227 L81,220 L81,210 L80,206 L77,203 L75,195 L72,189 L69,188 L69,196 L72,208 L73,209 L73,223 L74,229 L72,236 L68,235 L67,224 L67,216 L65,216 L64,210 L63,202 L61,194 L57,190 L57,179 L55,179 L56,191 L57,195 L54,201 L55,217 L53,220 L51,226 L48,226 L46,217 L47,210 L47,199 L45,197 L45,191 L48,188 L48,177 L46,173 L47,166 L49,162 L46,158 L47,149 L49,143 L52,131 L51,125 L42,113 L41,111 L41,102 L44,97 L46,90 L45,72 L37,67 L34,62 L33,53 L31,51 L24,52 L21,57 L16,59 L10,57 L3,57 L2,35 L-3,33 L-7,30 L-13,28 L-15,26 L-15,20 L-12,17 L-9,8 L-4,3 Z M3,1 L-5,6 L-9,12 L-9,17 L-4,22 L-5,29 L0,33 L11,31 L11,33 L16,32 L20,27 L19,23 L21,19 L23,18 L23,12 L19,6 L13,2 L10,1 Z M-11,19 L-13,21 L-13,26 L-12,27 L-7,27 L-5,22 L-7,19 Z M24,19 L21,21 L21,26 L22,27 L27,27 L29,25 L28,21 Z M5,32 L4,39 L4,54 L9,55 L9,32 Z M36,41 L32,45 L33,51 L36,53 L43,52 L45,50 L44,43 L40,41 Z M48,45 L44,52 L36,55 L35,60 L38,66 L46,70 L53,69 L58,65 L60,61 L60,53 L56,47 L52,45 Z M15,49 L13,51 L14,56 L18,57 L21,55 L21,50 L20,49 Z M48,71 L48,92 L52,93 L54,92 L54,74 L53,71 Z M51,120 L52,124 L54,124 L53,120 Z M58,120 L56,122 L51,143 L51,145 L54,145 L60,125 L60,120 Z M58,137 L56,142 L56,145 L62,147 L61,141 Z M54,146 L50,148 L48,151 L48,158 L53,163 L59,163 L63,159 L64,153 L61,148 L57,146 Z M65,158 L61,163 L59,164 L60,174 L58,176 L59,181 L66,183 L68,183 L71,178 L69,181 L70,185 L72,187 L77,186 L78,182 L76,178 L78,178 L81,173 L85,171 L84,166 L68,158 Z M51,165 L48,168 L49,175 L52,177 L57,176 L59,174 L59,167 L57,165 Z M88,165 L86,167 L87,172 L92,174 L95,170 L93,165 Z M82,173 L80,175 L80,180 L82,182 L87,181 L88,180 L88,175 L86,175 L86,173 Z M94,173 L95,178 L98,182 L100,182 L99,178 Z M51,178 L51,188 L53,188 L53,179 Z M61,183 L59,185 L59,190 L61,192 L66,191 L67,190 L67,185 L65,183 Z M86,183 L88,189 L90,190 L89,183 Z M100,183 L100,188 L104,189 L105,184 Z M76,188 L75,191 L78,196 L80,196 L79,191 Z M48,190 L46,194 L48,198 L53,198 L55,196 L54,191 L53,190 Z M90,191 L89,195 L90,197 L95,196 L94,191 Z M104,192 L105,194 Z M65,193 L64,198 L66,207 L69,207 L67,195 Z M105,197 L104,200 L107,201 L108,197 Z M79,198 L79,203 L83,204 L85,200 L84,198 Z M94,199 L95,204 L96,201 Z M50,201 L50,209 L52,209 L52,201 Z M96,207 L97,211 L99,211 L99,207 Z M67,209 L66,214 L71,215 L72,211 L70,209 Z M48,212 L47,215 L49,218 L53,217 L54,214 L53,212 Z M84,216 L84,220 L87,220 L87,217 Z M69,225 L69,229 L72,228 L72,225 Z M70,231 L71,233 Z "
+		 transform="translate(95,6)"
+		 style="fill: #000000;"
+		 id="path6" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right shoulder"
+		 cx="63.1"
+		 cy="66.0"
+		 r="11.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right elbow"
+		 cx="59.2"
+		 cy="115.0"
+		 r="11.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left shoulder"
+		 cx="142.2"
+		 cy="66.0"
+		 r="11.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left elbow"
+		 cx="149.2"
+		 cy="115.0"
+		 r="11.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right knee"
+		 cx="86.9"
+		 cy="244.0"
+		 r="9.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left knee"
+		 cx="125.0"
+		 cy="244.0"
+		 r="9.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right wrist"
+		 cx="57.0"
+		 cy="162.0"
+		 r="8.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right thumb MCP"
+		 cx="64.061302"
+		 cy="200.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right index MCP"
+		 cx="50.920536"
+		 cy="194.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right middle MCP"
+		 cx="39.920536"
+		 cy="189.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right 4th MCP"
+		 cx="28.920534"
+		 cy="185.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right 5th MCP"
+		 cx="21.920534"
+		 cy="175.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right thumb IP"
+		 cx="63.920536"
+		 cy="222.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right index PIP"
+		 cx="44.920536"
+		 cy="220.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right middle PIP"
+		 cx="32.920536"
+		 cy="208.5"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right 4th PIP"
+		 cx="20.920534"
+		 cy="202.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="right 5th PIP"
+		 cx="10.920534"
+		 cy="194.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left wrist"
+		 cx="150.0"
+		 cy="162.0"
+		 r="8.0" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left thumb MCP"
+		 cx="144.92053"
+		 cy="200.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left index MCP"
+		 cx="157.92053"
+		 cy="194.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left middle MCP"
+		 cx="168.92053"
+		 cy="189.0"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left 4th MCP"
+		 cx="178.92053"
+		 cy="183.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left 5th MCP"
+		 cx="184.92053"
+		 cy="174.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left thumb IP"
+		 cx="145.92053"
+		 cy="220.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left index PIP"
+		 cx="163.92053"
+		 cy="217.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left middle PIP"
+		 cx="174.92053"
+		 cy="208.5"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left 4th PIP"
+		 cx="186.92053"
+		 cy="199.92053"
+		 r="4.9205346" />
+	  <circle
+		 style="fill-rule:evenodd"
+		 class="swollen_joint"
+		 id="left 5th PIP"
+		 cx="197.92053"
+		 cy="191.92053"
+		 r="4.9205346" />
+	</svg>
+</div>
+
+
+<script>
+    // Track selected joints
+    let painfulJoints = new Set();
+    let swollenJoints = new Set();
+
+    function toggleJoint(event, jointSet) {
+        const joint = event.target.id;
+        if (jointSet.has(joint)) {
+		    event.target.style.setProperty("fill","#ffffff");
+            jointSet.delete(joint);
+            event.target.classList.remove('selected');
+        } else {
+		    event.target.style.setProperty("fill","#ff0000");
+            jointSet.add(joint);
+            event.target.classList.add('selected');
+        }
+    }
+
+    painfuljoints = document.getElementsByClassName('painful_joint');
+	for (joint of painfuljoints) {
+	    joint.addEventListener('click', function(event) {
+        toggleJoint(event, painfulJoints);
+		document.getElementById('painful-joints').innerText = `Painful joints: ${formatJoints(painfulJoints)}`;
+        });
+	}
+	
+    swollenjoints = document.getElementsByClassName('swollen_joint');
+	for (joint of swollenjoints) {
+	    joint.addEventListener('click', function(event) {
+        toggleJoint(event, swollenJoints);
+		document.getElementById('swollen-joints').innerText = `Swollen joints: ${formatJoints(swollenJoints)}`;
+        });
+	}
+
+    function formatJoints(joints) {
+        return Array.from(joints).join(', ');
+    }
+
+    function calculateDAS28() {
+        const crp = parseFloat(document.getElementById('crp').value);
+		const ga = parseFloat(document.getElementById('ga').value);
+        const painfulCount = painfulJoints.size;
+        const swollenCount = swollenJoints.size;
+		if (ga <= 100) {
+            das28 = (0.56 * Math.sqrt(painfulCount)) + (0.28 * Math.sqrt(swollenCount)) + (0.36 * Math.log(crp + 1)) + 0.014 * ga + 0.96;
+		}
+		else {das28 = NaN;}
+        document.getElementById('das28-crp-score').innerText = `DAS28-CRP Score: ${das28.toFixed(2)}`;
+		colorDAS28(das28, 'das28-crp-score');
+		return das28;
+    }
+	
+	function calculateDAS28ESR() {
+        const esr = parseFloat(document.getElementById('esr').value);
+		const ga = parseFloat(document.getElementById('ga').value);
+        const painfulCount = painfulJoints.size;
+        const swollenCount = swollenJoints.size;
+		if (ga <= 100) {
+            das28 = (0.56 * Math.sqrt(painfulCount)) + (0.28 * Math.sqrt(swollenCount)) + (0.7 * Math.log(esr)) + 0.014 * ga;
+		}
+		else {das28 = NaN;}
+        document.getElementById('das28-esr-score').innerText = `DAS28-ESR Score: ${das28.toFixed(2)}`;
+        colorDAS28(das28, 'das28-esr-score');
+        return das28;
+    }
+	
+	function colorDAS28(das28, scoretype) {
+	    if (das28 < 2.6) {
+            document.getElementById(scoretype).style.color = "green";
+            document.getElementById(scoretype).innerText += " (remission)";
+		}
+        else if (das28 >= 2.6 && das28 < 3.2) {
+            document.getElementById(scoretype).style.color = "blue";
+            document.getElementById(scoretype).innerText += " (low activity)";
+        }
+        else if (das28 >= 3.2 && das28 <= 5.1) {
+            document.getElementById(scoretype).style.color = "orange";
+            document.getElementById(scoretype).innerText += " (moderate activity)";
+        }
+        else if (das28 > 5.1) {
+            document.getElementById(scoretype).style.color = "red";
+            document.getElementById(scoretype).innerText += " (high activity)";
+        }
+	}
+</script>
+
+</body>
+</html>
